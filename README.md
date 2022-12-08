@@ -5,6 +5,10 @@ Originally based on https://github.com/PolEpie/gmsv_mongodb
 Includes:
 * Upgraded mongo-c-driver to 1.17.1
 
+Supported platforms:
+* Windows x64
+> Linux support coming soon
+
 # Installation
 
 Copy the appropiate binary to `garrysmod\lua\bin`
