@@ -1,0 +1,33 @@
+name: CI Workflow
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  build-containers:
+    name: Build Containers
+    runs-on: ${{ matrix.os }}
+    strategy:
+      max-parallel: 3
+      matrix:
+        os: [windows-2022]
+        include:
+        - os: windows-2022
+          base: nanoserver-ltsc2022
+          file: Dockerfile.windows
+          artifact: gmsv_MongoDb_win64.dll
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Docker Build
+      run: 
+        docker build -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} . -t ${ matrix.os } && \
+        CID=$(docker create ${ matrix.os }) && \
+        docker cp ${CID}:/app/build ./ && \
+        docker rm ${CID}
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v3
+      with:
+        name: binary
+        path: build/bin/release/${{matrix.artifact}}
