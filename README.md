@@ -37,3 +37,7 @@ hook.Add("player_connect", "AnnounceConnection", function( data )
     })
 end)
 ```
+
+# Building
+
+See Build.md

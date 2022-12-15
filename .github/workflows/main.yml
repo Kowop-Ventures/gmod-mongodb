@@ -14,7 +14,6 @@ jobs:
         os: [windows-2022]
         include:
         - os: windows-2022
-          base: nanoserver-ltsc2022
           file: Dockerfile.windows
           artifact: gmsv_MongoDb_win64.dll
     steps:
@@ -23,7 +22,7 @@ jobs:
 
     - name: Docker Build
       run:
-        docker build -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} . -t ${{ matrix.os }} && \
+        docker build -f ${{ matrix.file }} . -t ${{ matrix.os }} && \
         CID=$(docker create ${ matrix.os }) && \
         docker cp ${CID}:/app/build ./ && \
         docker rm ${CID}
