@@ -21,8 +21,8 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Docker Build
-      run: 
-        docker build -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} . -t ${ matrix.os } && \
+      run:
+        docker build -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} . -t ${{ matrix.os }} && \
         CID=$(docker create ${ matrix.os }) && \
         docker cp ${CID}:/app/build ./ && \
         docker rm ${CID}
