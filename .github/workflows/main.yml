@@ -30,6 +30,7 @@ jobs:
       uses: mr-smithers-excellent/docker-build-push@v5
       with:
         image: gmod-mongodb/build
+        registry: docker.io # Not used, image is not published
         dockerfile: ${{ matrix.file }}
         tags: ${{ matrix.os }}
         pushImage: false
