@@ -1,0 +1,42 @@
+FROM ubuntu
+
+RUN apt update -y
+RUN apt install git cmake gcc g++ libssl-dev -y
+
+WORKDIR /app
+
+# Download and compile mongo c driver
+
+RUN cmake --version
+
+RUN \
+    mkdir temp \
+    && cd temp \
+    && git clone https://github.com/mongodb/mongo-c-driver.git \
+    && cd mongo-c-driver \
+    && git checkout 1.17.1
+
+RUN \
+    cd temp \
+    && cd mongo-c-driver \
+    && echo 1.17.1 | tee VERSION_CURRENT \
+    && mkdir cmake-build \
+    && cd cmake-build \
+    && cmake -DCMAKE_INSTALL_PREFIX=out -DCMAKE_PREFIX_PATH=out .. \
+    && cmake --build . --config RelWithDebInfo --target install \
+    && cd ../../../ \
+    && cp -r ./temp/mongo-c-driver/cmake-build/out ./ \
+    && mv ./out ./mongo-c-driver
+
+COPY . .
+
+# Build gmod module
+RUN \
+    mkdir build \
+    && cd build \
+    && export CMAKE_PREFIX_PATH=$(realpath ../mongo-c-driver) \
+    && echo $CMAKE_PREFIX_PATH \
+    && cmake .. \
+    && cmake --build . --config Release
+
+ENTRYPOINT ["bash"]

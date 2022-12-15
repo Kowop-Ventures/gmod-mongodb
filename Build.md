@@ -1,10 +1,21 @@
+# Build Linux using docker
+```
+docker build . -t gmod-mongodb-linux -f Dockerfile.linux && \
+CID=$(docker create gmod-mongodb-linux) && \
+docker cp ${CID}:/app/build ./ && \
+docker rm ${CID}
+```
+> Make sure that docker is using Linux containers
+
 # Build Windows using docker
+
 ```
 docker build . -t gmod-mongodb-windows -f Dockerfile.windows && \
 CID=$(docker create gmod-mongodb-windows) && \
 docker cp ${CID}:/app/build ./ && \
 docker rm ${CID}
 ```
+> Make sure that docker is using Windows containers
 
 # Build Manually on Windows
 
