@@ -35,8 +35,9 @@ jobs:
       #   tags: ${{ matrix.os }}
       #   pushImage: false
       run:
-        docker buildx build -t ${ matrix.os } \
-        -f ${{ matrix.file }} \
+        docker buildx build \
+        --tag ${{ matrix.os }} \
+        --file ${{ matrix.file }} \
         --cache-to type=gha \
         --cache-from type=gha,mode=max .
 
