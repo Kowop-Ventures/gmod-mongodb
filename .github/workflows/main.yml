@@ -19,10 +19,14 @@ jobs:
           artifact: gmsv_MongoDb_win64.dll
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: Docker Build
       run:
-        docker build -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} . -t ${{ matrix.os }} && \
+        docker buildx create --use --driver=docker-container && \
+        docker buildx -f ${{ matrix.file }} --build-arg BASE=${{ matrix.base }} . \
+        -t ${{ matrix.os }} \
+        --cache-to type=gha \
+        --cache-from type=gha,mode=max && \
         CID=$(docker create ${ matrix.os }) && \
         docker cp ${CID}:/app/build ./ && \
         docker rm ${CID}
