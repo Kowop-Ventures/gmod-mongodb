@@ -1,4 +1,12 @@
-# Build
+# Build Windows using docker
+```
+docker build . -t gmod-mongodb-windows -f Dockerfile.windows && \
+CID=$(docker create gmod-mongodb-windows) && \
+docker cp ${CID}:/app/build ./ && \
+docker rm ${CID}
+```
+
+# Build Manually on Windows
 
 Prerequisites
 ```
@@ -6,7 +14,7 @@ cmake 3.24.3
 Visual Studio 17 2022
 ```
 
-# Build and compile mongo-c-driver
+## Build and compile mongo-c-driver
 
 For Windows:
 ```powershell
@@ -26,13 +34,15 @@ cp -r ./temp/mongo-c-driver/cmake-build/out ./
 mv ./out ./mongo-c-driver
 ```
 
-# Build gmod module
+## Build gmod module
 
 For Windows
 ```powershell
 mkdir build
 cd build
 $CMAKE_PREFIX_PATH = (Resolve-Path -Path  ../mongo-c-driver).Path
-cmake -DCMAKE_GENERATOR_PLATFORM=x64 -A x64 ..  
+cmake -DCMAKE_GENERATOR_PLATFORM=x64 -A x64 ..
 cmake --build . --target ALL_BUILD --config Release
 ```
+
+

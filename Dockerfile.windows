@@ -1,0 +1,79 @@
+# escape=`
+
+# Template: https://learn.microsoft.com/en-us/visualstudio/install/build-tools-container?view=vs-2022
+
+# Use the latest Windows Server Core 2022 image.
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
+
+# Restore the default Windows shell for correct batch processing.
+SHELL ["cmd", "/S", "/C"]
+
+RUN `
+    # Download the Build Tools bootstrapper.
+    curl -SL --output vs_buildtools.exe https://aka.ms/vs/17/release/vs_buildtools.exe `
+    `
+    # Install Build Tools with the Microsoft.VisualStudio.Workload.AzureBuildTools workload, excluding workloads and components with known issues.
+    && (start /w vs_buildtools.exe --quiet --wait --norestart --nocache `
+        --installPath "%ProgramFiles(x86)%\Microsoft Visual Studio\2022\BuildTools" `
+        --add Microsoft.VisualStudio.Workload.AzureBuildTools `
+        --remove Microsoft.VisualStudio.Component.Windows10SDK.10240 `
+        --remove Microsoft.VisualStudio.Component.Windows10SDK.10586 `
+        --remove Microsoft.VisualStudio.Component.Windows10SDK.14393 `
+        --remove Microsoft.VisualStudio.Component.Windows81SDK `
+        --add Microsoft.VisualStudio.Workload.VCTools;includeRecommended `
+        --add Microsoft.Component.MSBuild `
+        || IF "%ERRORLEVEL%"=="3010" EXIT 0) `
+    `
+    # Cleanup
+    && del /q vs_buildtools.exe
+
+# Install git
+ENV ChocolateyUseWindowsCompression false
+RUN powershell Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
+RUN powershell -NoProfile -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin;;%ALLUSERSPROFILE%\chocolatey\lib"
+RUN choco install git.install -y --no-progress
+
+RUN setx path "%path%;C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin"
+
+WORKDIR c:\\app\
+
+# Download and compile mongo c driver
+RUN echo %PATH%
+SHELL ["powershell"]
+
+RUN cmake --version
+
+RUN `
+    mkdir temp `
+    ; cd temp `
+    ; git clone https://github.com/mongodb/mongo-c-driver.git `
+    ; cd mongo-c-driver `
+    ; git checkout 1.17.1
+
+RUN `
+    cd temp `
+    ; cd mongo-c-driver `
+    ; echo 1.17.1 | tee VERSION_CURRENT `
+    ; mkdir cmake-build `
+    ; cd cmake-build `
+    ; cmake -DCMAKE_INSTALL_PREFIX=out -DCMAKE_PREFIX_PATH=out .. `
+    ; cmake --build . --config RelWithDebInfo --target install `
+    ; cd ../../../ `
+    ; cp -r ./temp/mongo-c-driver/cmake-build/out ./ `
+    ; mv ./out ./mongo-c-driver
+
+COPY . .
+
+RUN setx CMAKE_PREFIX_PATH (Resolve-Path -Path  .\mongo-c-driver).Path
+
+# Build gmod module
+RUN `
+    mkdir build `
+    ; cd build `
+    ; cmake -DCMAKE_GENERATOR_PLATFORM=x64 -A x64 .. `
+    ; cmake --build . --target ALL_BUILD --config Release
+
+SHELL ["cmd", "/S", "/C"]
+# Define the entry point for the docker container.
+# This entry point starts the developer command prompt and launches the PowerShell shell.
+ENTRYPOINT ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&", "powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
