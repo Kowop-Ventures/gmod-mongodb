@@ -29,10 +29,10 @@ jobs:
       # uses: docker/build-push-action@v2
       uses: mr-smithers-excellent/docker-build-push@v5
       with:
-        context: .
-        file: ${{ matrix.file }}
+        image: gmod-mongodb/build
+        dockerfile: ${{ matrix.file }}
         tags: ${{ matrix.os }}
-        push: false
+        pushImage: false
 
     - name: Extract artifact
       run:
