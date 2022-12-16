@@ -1,5 +1,5 @@
-#ifndef GMSV_MONGODB_UTIL_HPP
-#define GMSV_MONGODB_UTIL_HPP
+#ifndef GMOD_MONGODB_UTIL_HPP
+#define GMOD_MONGODB_UTIL_HPP
 
 #include "MongoDB.hpp"
 
@@ -9,4 +9,4 @@ const char* LuaToJSON(GarrysMod::Lua::ILuaBase* LUA, int ref);
 
 bson_t* LuaToBSON(GarrysMod::Lua::ILuaBase* LUA, int ref);
 
-#endif //GMSV_MONGODB_UTIL_HPP
+#endif

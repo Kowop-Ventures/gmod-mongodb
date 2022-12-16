@@ -1,5 +1,5 @@
-#ifndef GMSV_MONGODB_BULK_HPP
-#define GMSV_MONGODB_BULK_HPP
+#ifndef GMOD_MONGODB_BULK_HPP
+#define GMOD_MONGODB_BULK_HPP
 
 #include "MongoDB.hpp"
 
@@ -17,4 +17,4 @@ int bulk_replace(lua_State* L);
 
 extern int BulkMetaTableId;
 
-#endif //GMSV_MONGODB_BULK_HPP
+#endif

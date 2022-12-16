@@ -1,5 +1,5 @@
-#ifndef GMSV_MONGODB_DATABASE_HPP
-#define GMSV_MONGODB_DATABASE_HPP
+#ifndef GMOD_MONGODB_DATABASE_HPP
+#define GMOD_MONGODB_DATABASE_HPP
 
 #include "MongoDB.hpp"
 
@@ -25,4 +25,4 @@ int database_collection_exists(lua_State* state);
 
 extern int DatabaseMetaTableId;
 
-#endif //GMSV_MONGODB_DATABASE_HPP
+#endif

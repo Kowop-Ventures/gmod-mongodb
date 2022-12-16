@@ -1,5 +1,5 @@
-#ifndef GMSV_MONGODB_MACROS_HPP
-#define GMSV_MONGODB_MACROS_HPP
+#ifndef GMOD_MONGODB_MACROS_HPP
+#define GMOD_MONGODB_MACROS_HPP
 
 #define EXPAND( x ) x
 #define NUM_ARGS_(_1, _2, _3, _4, _5, TOTAL, ...) TOTAL
@@ -135,4 +135,5 @@
 
 #define CLEANUP_QUERY3(s, t, VAR1, VAR2, CHECK) if (CHECK) { bson_destroy(&VAR2); LUA->ThrowError(VAR1.message); return 0; }
 
-#endif //GMSV_MONGODB_MACROS_HPP
+
+#endif

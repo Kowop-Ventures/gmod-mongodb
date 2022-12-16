@@ -1,5 +1,5 @@
-#ifndef GMSV_MONGODB_CLIENT_HPP
-#define GMSV_MONGODB_CLIENT_HPP
+#ifndef GMOD_MONGODB_CLIENT_HPP
+#define GMOD_MONGODB_CLIENT_HPP
 
 #include "MongoDB.hpp"
 
@@ -21,4 +21,4 @@ int client_collection(lua_State* state);
 
 extern int ClientMetaTableId;
 
-#endif //GMSV_MONGODB_CLIENT_HPP
+#endif

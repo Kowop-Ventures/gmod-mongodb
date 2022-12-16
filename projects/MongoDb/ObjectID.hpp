@@ -1,5 +1,5 @@
-#ifndef GMSV_MONGODB_OBJECTID_HPP
-#define GMSV_MONGODB_OBJECTID_HPP
+#ifndef GMOD_MONGODB_OBJECTID_HPP
+#define GMOD_MONGODB_OBJECTID_HPP
 
 #include "MongoDB.hpp"
 
@@ -15,4 +15,4 @@ int objectid_hash(lua_State* L);
 
 extern int ObjectIDMetaTableId;
 
-#endif //GMSV_MONGODB_OBJECTID_HPP
+#endif

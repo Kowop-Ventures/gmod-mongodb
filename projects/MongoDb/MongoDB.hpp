@@ -1,5 +1,5 @@
-#ifndef GMSV_MONGODB_MONGODB_HPP
-#define GMSV_MONGODB_MONGODB_HPP
+#ifndef GMOD_MONGODB_MONGODB_HPP
+#define GMOD_MONGODB_MONGODB_HPP
 
 #include <stdexcept>
 
@@ -16,4 +16,4 @@
 #include "Collection.hpp"
 #include "Bulk.hpp"
 
-#endif //GMSV_MONGODB_MONGODB_HPP
+#endif
