@@ -136,4 +136,43 @@
 #define CLEANUP_QUERY3(s, t, VAR1, VAR2, CHECK) if (CHECK) { bson_destroy(&VAR2); LUA->ThrowError(VAR1.message); return 0; }
 
 
+#define INSPECT_BSON(...) EXPAND(VA_MACRO(INSPECT_BSON, void, void, __VA_ARGS__ ))
+
+#define INSPECT_BSON1(s, t, VAR1) \
+    LUA->PushSpecial( GarrysMod::Lua::SPECIAL_GLOB ); \
+         LUA->GetField( -1, "print" ); \
+         LUA->PushString( bson_as_canonical_extended_json(VAR1, NULL) ); \
+         LUA->Call( 1, 0 ); \
+    LUA->Pop();
+
+#define INSPECT_BSON2(s, t, VAR1, VAR2) \
+    LUA->PushSpecial( GarrysMod::Lua::SPECIAL_GLOB ); \
+         LUA->GetField( -1, "print" ); \
+         LUA->PushString( bson_as_canonical_extended_json(VAR1, NULL) ); \
+         LUA->Call( 1, 0 ); \
+         LUA->GetField( -1, "print" ); \
+         LUA->PushString( bson_as_canonical_extended_json(VAR2, NULL) ); \
+         LUA->Call( 1, 0 ); \
+    LUA->Pop();
+
+#define INSPECT_BSON3(s, t, VAR1, VAR2, VAR3) \
+    LUA->PushSpecial( GarrysMod::Lua::SPECIAL_GLOB ); \
+         LUA->GetField( -1, "print" ); \
+         LUA->PushString( bson_as_canonical_extended_json(VAR1, NULL) ); \
+         LUA->Call( 1, 0 ); \
+         LUA->GetField( -1, "print" ); \
+         LUA->PushString( bson_as_canonical_extended_json(VAR2, NULL) ); \
+         LUA->Call( 1, 0 ); \
+         LUA->GetField( -1, "print" ); \
+         LUA->PushString( bson_as_canonical_extended_json(VAR3, NULL) ); \
+         LUA->Call( 1, 0 ); \
+    LUA->Pop();
+
+#define LOG(MSG) \
+    LUA->PushSpecial( GarrysMod::Lua::SPECIAL_GLOB ); \
+         LUA->GetField( -1, "print" ); \
+         LUA->PushString(MSG); \
+         LUA->Call( 1, 0 ); \
+    LUA->Pop();
+
 #endif
