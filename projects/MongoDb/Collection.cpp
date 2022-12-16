@@ -146,19 +146,60 @@ LUA_FUNCTION(collection_remove) {
     return 1;
 }
 
-LUA_FUNCTION(collection_update) {
+LUA_FUNCTION(collection_update_one) {
     CHECK_COLLECTION()
 
-    LUA->CheckType(2, GarrysMod::Lua::Type::Table);
-    LUA->CheckType(3, GarrysMod::Lua::Type::Table);
 
-    CHECK_BSON(selector, update)
+    // CHECK_BSON(selector, update, opts)
 
     SETUP_QUERY(error)
 
-    bool success = mongoc_collection_update(collection, MONGOC_UPDATE_MULTI_UPDATE, selector, update, nullptr, &error);
+    LUA->CheckType(2, GarrysMod::Lua::Type::Table);
+    LUA->CheckType(3, GarrysMod::Lua::Type::Table);
+    LUA->CheckType(4, GarrysMod::Lua::Type::Table);
+    int ref_opts = LUA->ReferenceCreate();
+    int ref_update = LUA->ReferenceCreate();
+    int ref_selector = LUA->ReferenceCreate();
 
-    CLEANUP_BSON(selector, update)
+    bson_t* opts = nullptr;
+    try {
+        opts = LuaToBSON(LUA, ref_opts);
+    } catch (std::runtime_error& e) {
+        if (ref_selector != INT_MIN) LUA->ReferenceFree(ref_selector);
+        if (ref_update != INT_MIN) LUA->ReferenceFree(ref_update);
+        if (ref_opts != INT_MIN) LUA->ReferenceFree(ref_opts);
+        LUA->ThrowError(e.what());
+    }
+
+    bson_t* update = nullptr;
+    try {
+        update = LuaToBSON(LUA, ref_update);
+    } catch (std::runtime_error& e) {
+        if (ref_selector != INT_MIN) LUA->ReferenceFree(ref_selector);
+        if (ref_update != INT_MIN) LUA->ReferenceFree(ref_update);
+        if (ref_opts != INT_MIN) LUA->ReferenceFree(ref_opts);
+        LUA->ThrowError(e.what());
+    }
+
+    bson_t* selector = nullptr;
+    try {
+        selector = LuaToBSON(LUA, ref_selector);
+    } catch (std::runtime_error& e) {
+        if (ref_selector != INT_MIN) LUA->ReferenceFree(ref_selector);
+        if (ref_update != INT_MIN) LUA->ReferenceFree(ref_update);
+        if (ref_opts != INT_MIN) LUA->ReferenceFree(ref_opts);
+        LUA->ThrowError(e.what());
+    }
+
+
+    bool success = mongoc_collection_update_one(collection, selector, update, opts, NULL, &error);
+
+
+    // CLEANUP_BSON(selector, update, opts)
+
+    bson_destroy(selector);
+    bson_destroy(update);
+    bson_destroy(opts);
 
     CLEANUP_QUERY(error, !success)
 

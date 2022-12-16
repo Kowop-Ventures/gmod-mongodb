@@ -96,8 +96,8 @@ GMOD_MODULE_OPEN() {
         LUA->PushCFunction(collection_insert);
         LUA->SetField(-2, "Insert");
 
-        LUA->PushCFunction(collection_update);
-        LUA->SetField(-2, "Update");
+        LUA->PushCFunction(collection_update_one);
+        LUA->SetField(-2, "UpdateOne");
 
         LUA->PushCFunction(collection_remove);
         LUA->SetField(-2, "Remove");

@@ -10,19 +10,26 @@
  * @return
  */
 LUA_FUNCTION(new_client) {
-    auto uri = LUA->CheckString(1);
+    auto uri_string = LUA->CheckString(1);
     auto name = LUA->CheckString(2);
 
-    auto client = mongoc_client_new(uri);
+    bson_error_t error;
+    mongoc_uri_t *uri = mongoc_uri_new_with_error(uri_string, &error);
+    if (!uri) {
+        LUA->ThrowError(error.message);
+        return 0;
+    }
+
+    auto client = mongoc_client_new_from_uri(uri);
 
     if (!client)  {
         LUA->ThrowError("MongoDB failed to create a client!");
         return 0;
     }
 
-    mongoc_client_set_appname(client, name);
+    mongoc_client_set_error_api (client, 2);
 
-    bson_error_t error;
+    mongoc_client_set_appname(client, name);
 
     if (!mongoc_client_command_simple(client, "admin", BCON_NEW("ping", BCON_INT32(1)), nullptr, nullptr, &error)) {
         LUA->ThrowError(error.message);
