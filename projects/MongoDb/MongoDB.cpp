@@ -53,6 +53,9 @@ GMOD_MODULE_OPEN() {
         LUA->PushCFunction(database_command);
         LUA->SetField(-2, "Command");
 
+        LUA->PushCFunction(database_write_command_with_opts);
+        LUA->SetField(-2, "WriteCommandWithOpts");
+
         LUA->PushCFunction(database_user_add);
         LUA->SetField(-2, "AddUser");
 

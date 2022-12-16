@@ -1,9 +1,14 @@
 #include "Database.hpp"
 
-LUA_FUNCTION(destroy_database) {
-    auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId);
+#define CHECK_DATABASE() \
+        auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId); \
+        if (database == nullptr) { \
+            LUA->ThrowError("database is nullptr, did you forget to pass \"self\" with \":\" ?"); \
+            return 0; \
+        }
 
-    if (database == nullptr) return 0;
+LUA_FUNCTION(destroy_database) {
+    CHECK_DATABASE()
 
     mongoc_database_destroy(database);
 
@@ -11,9 +16,7 @@ LUA_FUNCTION(destroy_database) {
 }
 
 LUA_FUNCTION(database_name) {
-    auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId);
-
-    if (database == nullptr) return 0;
+    CHECK_DATABASE()
 
     auto name = mongoc_database_get_name(database);
 
@@ -23,9 +26,7 @@ LUA_FUNCTION(database_name) {
 }
 
 LUA_FUNCTION(database_copy) {
-    auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId);
-
-    if (database == nullptr) return 0;
+    CHECK_DATABASE()
 
     auto copy = mongoc_database_copy(database);
 
@@ -35,9 +36,7 @@ LUA_FUNCTION(database_copy) {
 }
 
 LUA_FUNCTION(database_drop) {
-    auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId);
-
-    if (database == nullptr) return 0;
+    CHECK_DATABASE()
 
     bson_error_t error;
     bool success = mongoc_database_drop(database, &error);
@@ -51,9 +50,7 @@ LUA_FUNCTION(database_drop) {
 }
 
 LUA_FUNCTION(database_command) {
-    auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId);
-
-    if (database == nullptr) return 0;
+    CHECK_DATABASE()
 
     LUA->CheckType(2, GarrysMod::Lua::Type::Table);
 
@@ -79,10 +76,28 @@ LUA_FUNCTION(database_command) {
     return 1;
 }
 
-LUA_FUNCTION(database_user_add) {
-    auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId);
+LUA_FUNCTION(database_write_command_with_opts) {
+    CHECK_DATABASE()
 
-    if (database == nullptr) return 0;
+    CHECK_BSON(command, opts)
+
+    SETUP_QUERY(error, reply)
+
+    bool success = mongoc_database_write_command_with_opts(database, command, nullptr, &reply, &error);
+
+    CLEANUP_BSON(command, opts)
+
+    CLEANUP_QUERY(error, reply, !success)
+
+    auto resultRef = BSONToLua(LUA, &reply);
+    LUA->ReferencePush(resultRef);
+
+    return 1;
+}
+
+LUA_FUNCTION(database_user_add) {
+    CHECK_DATABASE()
+
 
     auto username = LUA->CheckString(2);
     auto password = LUA->CheckString(3);
@@ -132,9 +147,7 @@ LUA_FUNCTION(database_user_add) {
 }
 
 LUA_FUNCTION(database_user_remove) {
-    auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId);
-
-    if (database == nullptr) return 0;
+    CHECK_DATABASE()
 
     auto username = LUA->CheckString(2);
 
@@ -151,9 +164,7 @@ LUA_FUNCTION(database_user_remove) {
 }
 
 LUA_FUNCTION(database_collection_exists) {
-    auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId);
-
-    if (database == nullptr) return 0;
+    CHECK_DATABASE()
 
     auto name = LUA->CheckString(2);
 
@@ -170,9 +181,7 @@ LUA_FUNCTION(database_collection_exists) {
 }
 
 LUA_FUNCTION(database_collection_get) {
-    auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId);
-
-    if (database == nullptr) return 0;
+    CHECK_DATABASE()
 
     auto name = LUA->CheckString(2);
 
@@ -184,9 +193,7 @@ LUA_FUNCTION(database_collection_get) {
 }
 
 LUA_FUNCTION(database_collection_create) {
-    auto database = LUA->GetUserType<mongoc_database_t>(1, DatabaseMetaTableId);
-
-    if (database == nullptr) return 0;
+    CHECK_DATABASE()
 
     auto name = LUA->CheckString(2);
 

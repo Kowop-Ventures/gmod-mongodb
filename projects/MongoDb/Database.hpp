@@ -7,6 +7,8 @@ int destroy_database(lua_State* state);
 
 int database_command(lua_State* state);
 
+int database_write_command_with_opts(lua_State* state);
+
 int database_copy(lua_State* state);
 
 int database_drop(lua_State* state);
