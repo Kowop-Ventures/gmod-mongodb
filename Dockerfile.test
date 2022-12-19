@@ -8,6 +8,9 @@ FROM mcr.microsoft.com/windows/servercore:ltsc2022
 # Restore the default Windows shell for correct batch processing.
 SHELL ["cmd", "/S", "/C"]
 
+
+WORKDIR c:\\app\
+
 COPY . .
 
 RUN mkdir build && `
