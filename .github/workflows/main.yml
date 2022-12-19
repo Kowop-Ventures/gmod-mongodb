@@ -1,8 +1,8 @@
 name: CI Workflow
 on:
   push:
-    branches:
-    - main
+    tags:
+      - 'v*'
 
 jobs:
   build-containers:
@@ -11,17 +11,16 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [windows-2022]
-        # os: [windows-2022, ubuntu-22.04]
+        os: [windows-2022, ubuntu-22.04]
         include:
         - os: windows-2022
-          # file: Dockerfile.windows
-          # artifact: build/bin/release/gmsv_MongoDb_win64.dll
-          file: Dockerfile.test
-          artifact: build/build.txt
-        # - os: ubuntu-22.04
-        #   file: Dockerfile.linux
-        #   artifact: build/projects/MongoDb/gmsv_MongoDb_linux64.dll
+          file: Dockerfile.windows
+          artifact-path: build/bin/release
+          artifact: gmsv_MongoDb_win64.dll
+        - os: ubuntu-22.04
+          file: Dockerfile.linux
+          artifact-path: build/projects/MongoDb
+          artifact: gmsv_MongoDb_linux64.dll
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -35,5 +34,5 @@ jobs:
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v3
       with:
-        name: binary
-        path: ${{matrix.artifact}}
+        name: ${{artifact}}
+        path: ${{artifact-path}}/${{matrix.artifact}}
