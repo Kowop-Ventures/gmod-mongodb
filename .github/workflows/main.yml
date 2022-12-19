@@ -15,10 +15,10 @@ jobs:
         include:
         - os: windows-2022
           file: Dockerfile.windows
-          artifact: gmsv_MongoDb_win64.dll
+          artifact: build/bin/release/gmsv_MongoDb_win64.dll
         - os: ubuntu-22.04
           file: Dockerfile.linux
-          artifact: gmsv_MongoDb_linux64.dll
+          artifact: build/projects/MongoDb/gmsv_MongoDb_linux64.dll
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -32,4 +32,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: binary
-        path: build/bin/release/${{matrix.artifact}}
+        path: ${{matrix.artifact}}
