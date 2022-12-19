@@ -26,9 +26,7 @@ jobs:
     - name: Docker Build
       run: >
         docker build -f ${{ matrix.file }} . -t build-image &&
-        docker create build-image --name build-container &&
-        docker cp build-container:/app/build ./ &&
-        docker rm build-container
+        docker cp $(docker create build-image):/app/build ./ &&
 
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v3
