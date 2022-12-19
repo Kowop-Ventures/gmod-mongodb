@@ -25,10 +25,10 @@ jobs:
 
     - name: Docker Build
       run: >
-        docker build -f ${{ matrix.file }} . -t ${{ matrix.os }} &&
-        CID=$(docker create ${ matrix.os }) &&
-        docker cp ${CID}:/app/build ./ &&
-        docker rm ${CID}
+        docker build -f ${{ matrix.file }} . -t build-image &&
+        docker create build-image --name build-container &&
+        docker cp build-container:/app/build ./ &&
+        docker rm build-container
 
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v3
