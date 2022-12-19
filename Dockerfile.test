@@ -1,0 +1,20 @@
+# escape=`
+
+# Template: https://learn.microsoft.com/en-us/visualstudio/install/build-tools-container?view=vs-2022
+
+# Use the latest Windows Server Core 2022 image.
+FROM mcr.microsoft.com/windows/servercore:ltsc2022
+
+# Restore the default Windows shell for correct batch processing.
+SHELL ["cmd", "/S", "/C"]
+
+COPY . .
+
+RUN mkdir build && `
+    cd build && `
+    touch build.txt
+
+SHELL ["cmd", "/S", "/C"]
+# Define the entry point for the docker container.
+# This entry point starts the developer command prompt and launches the PowerShell shell.
+ENTRYPOINT ["C:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\Common7\\Tools\\VsDevCmd.bat", "&&", "powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass"]
