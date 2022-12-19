@@ -19,6 +19,7 @@ jobs:
           # artifact: build/bin/release/gmsv_MongoDb_win64.dll
           file: Dockerfile.test
           artifact: build/build.txt
+          build-dir: \app\build
         # - os: ubuntu-22.04
         #   file: Dockerfile.linux
         #   artifact: build/projects/MongoDb/gmsv_MongoDb_linux64.dll
@@ -29,7 +30,7 @@ jobs:
     - name: Docker Build
       run: >
         docker build -f ${{ matrix.file }} . -t build-image &&
-        docker cp $(docker create build-image):/app/build .
+        docker cp $(docker create build-image):${{ matrix.build-dir }} .
 
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v3
