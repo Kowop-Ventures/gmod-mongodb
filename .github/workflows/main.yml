@@ -11,20 +11,23 @@ jobs:
     strategy:
       max-parallel: 3
       matrix:
-        os: [windows-2022]
+        os: [windows-2022, ubuntu-22.04]
         include:
         - os: windows-2022
           file: Dockerfile.windows
           artifact: gmsv_MongoDb_win64.dll
+        - os: ubuntu-22.04
+          file: Dockerfile.linux
+          artifact: gmsv_MongoDb_linux64.dll
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
     - name: Docker Build
       run:
-        docker build -f ${{ matrix.file }} . -t ${{ matrix.os }} && \
-        CID=$(docker create ${ matrix.os }) && \
-        docker cp ${CID}:/app/build ./ && \
+        docker build -f ${{ matrix.file }} . -t ${{ matrix.os }}
+        CID=$(docker create ${ matrix.os })
+        docker cp ${CID}:/app/build ./
         docker rm ${CID}
 
     - name: 'Upload Artifact'
