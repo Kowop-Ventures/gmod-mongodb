@@ -24,10 +24,10 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Docker Build
-      run:
-        docker build -f ${{ matrix.file }} . -t ${{ matrix.os }}
-        CID=$(docker create ${ matrix.os })
-        docker cp ${CID}:/app/build ./
+      run: >
+        docker build -f ${{ matrix.file }} . -t ${{ matrix.os }} &&
+        CID=$(docker create ${ matrix.os }) &&
+        docker cp ${CID}:/app/build ./ &&
         docker rm ${CID}
 
     - name: 'Upload Artifact'
