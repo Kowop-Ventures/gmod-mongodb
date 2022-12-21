@@ -14,20 +14,20 @@ set(SOURCES
 	MongoDB.hpp
 	Collection.cpp
 	Collection.hpp
-	Bulk.cpp 
-	Bulk.hpp 
-	Macros.hpp 
-	ObjectID.cpp 
+	Bulk.cpp
+	Bulk.hpp
+	Macros.hpp
+	ObjectID.cpp
 	ObjectID.hpp
 )
 
-add_library(MongoDb SHARED ${SOURCES})
+add_library(mongodb SHARED ${SOURCES})
 
 
-target_include_directories(MongoDb PRIVATE ${MONGOC_STATIC_INCLUDE_DIRS})
+target_include_directories(mongodb PRIVATE ${MONGOC_STATIC_INCLUDE_DIRS})
 
-target_link_libraries(MongoDb PRIVATE mongo::mongoc_static)
+target_link_libraries(mongodb PRIVATE mongo::mongoc_static)
 
-target_link_libraries(MongoDb PRIVATE gmod-module-base)
+target_link_libraries(mongodb PRIVATE gmod-module-base)
 
-set_gmod_suffix_prefix(MongoDb)
+set_gmod_suffix_prefix(mongodb)

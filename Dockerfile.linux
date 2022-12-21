@@ -1,7 +1,7 @@
-FROM ubuntu
+FROM ubuntu:20.04
 
 RUN apt update -y
-RUN apt install git cmake gcc g++ libssl-dev -y
+RUN DEBIAN_FRONTEND=noninteractive apt install git cmake gcc g++ libssl-dev -y
 
 WORKDIR /app
 

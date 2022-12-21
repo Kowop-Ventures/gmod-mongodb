@@ -7,18 +7,18 @@ Includes:
 
 Supported platforms:
 * Windows x64
-> Linux support coming soon
+* Linux x64 (Ubuntu 20.04)
 
 # Installation
 
 Copy the appropiate binary to `garrysmod\lua\bin`
 
 Fow Windows:
-Copy `gmsv_MongoDb_win64.dll` into `garrysmod\lua\bin`
+Copy `gmsv_mongodb_win64.dll` into `garrysmod\lua\bin`
 
 # Usage
 ```lua
-require('MongoDb')
+require('mongodb')
 local connectionString = 'mongodb+srv://<username>:<passwod>@cluster0.123456.mongodb.net'
 local dbClient = mongodb.Client(connectionString, 'Harvest')
 local database = dbClient:Database('main')
