@@ -1,4 +1,6 @@
-# Mongodb lua module for Garry's Mod
+# Mongodb for Garry's Mod
+
+![ci-status](https://github.com/chriswoodle/gmod-mongodb/actions/workflows/main.yml/badge.svg)
 
 Originally based on https://github.com/PolEpie/gmsv_mongodb
 
