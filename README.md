@@ -30,7 +30,6 @@ hook.Add("player_connect", "AnnounceConnection", function( data )
     playersCollection:Insert({
         steamid = data.networkid,
         name = data.name,
-        steamid = data.networkid,
         userid = data.userid,
         bot = data.bot,
         connectedAt = os.date("!%Y-%m-%dT%TZ" , os.time())
