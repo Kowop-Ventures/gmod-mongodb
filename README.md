@@ -20,8 +20,8 @@ Copy `gmsv_mongodb_win64.dll` into `garrysmod\lua\bin`
 ```lua
 require('mongodb')
 local connectionString = 'mongodb+srv://<username>:<passwod>@cluster0.123456.mongodb.net'
-local dbClient = mongodb.Client(connectionString, 'Harvest')
-local database = dbClient:Database('main')
+local dbClient = mongodb.Client(connectionString, 'MyApplication')
+local database = dbClient:Database('myDatabase')
 local playersCollection = database:GetCollection('player-connected')
 
 gameevent.Listen( "player_connect" )
