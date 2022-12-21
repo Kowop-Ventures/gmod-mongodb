@@ -9,14 +9,17 @@ Supported platforms:
 * Windows x64
 * Linux x64 (Ubuntu 20.04)
 
+# Documentation
+
+Please see articles in the [Wiki](https://github.com/chriswoodle/gmod-mongodb/wiki).
+
 # Installation
 
-Copy the appropiate binary to `garrysmod\lua\bin`
+Download the appropiate binary from [Releases](https://github.com/chriswoodle/gmod-mongodb/releases) into your `garrysmod\lua\bin` directory.
 
-Fow Windows:
-Copy `gmsv_mongodb_win64.dll` into `garrysmod\lua\bin`
+# Example
 
-# Usage
+For more examples see [Usage](https://github.com/chriswoodle/gmod-mongodb/wiki/Usage)
 ```lua
 require('mongodb')
 local connectionString = 'mongodb+srv://<username>:<passwod>@cluster0.123456.mongodb.net'
@@ -36,7 +39,3 @@ hook.Add("player_connect", "AnnounceConnection", function( data )
     })
 end)
 ```
-
-# Building
-
-See Build.md
