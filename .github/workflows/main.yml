@@ -19,7 +19,7 @@ jobs:
           artifact: gmsv_mongodb_win64.dll
         - os: ubuntu-22.04
           file: Dockerfile.linux
-          artifact-path: build/projects/mongodb
+          artifact-path: build/projects/MongoDb
           artifact: gmsv_mongodb_linux64.dll
     steps:
     - name: Checkout
